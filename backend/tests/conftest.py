@@ -153,3 +153,57 @@ def config_with_valid_max_results(mocker):
     mock_config.CHUNK_SIZE = 1000
     mock_config.CHUNK_OVERLAP = 200
     return mock_config
+
+
+@pytest.fixture
+def mock_rag_system(mocker, sample_course):
+    """Mock RAGSystem for API testing"""
+    mock_rag = mocker.MagicMock()
+
+    # Mock session manager
+    mock_rag.session_manager.create_session.return_value = "test-session-123"
+
+    # Mock query method - returns (answer, sources)
+    mock_rag.query.return_value = (
+        "Variables in Python are used to store data. You can create a variable by assigning a value to a name.",
+        [
+            {"text": "Python Basics - Lesson 1: Introduction to Variables", "url": "https://example.com/python-basics/lesson-1"},
+            {"text": "Python Basics - Lesson 1: Introduction to Variables", "url": "https://example.com/python-basics/lesson-1"}
+        ]
+    )
+
+    # Mock get_course_analytics
+    mock_rag.get_course_analytics.return_value = {
+        "total_courses": 1,
+        "course_titles": ["Python Basics"]
+    }
+
+    return mock_rag
+
+
+@pytest.fixture
+def mock_rag_system_with_error(mocker):
+    """Mock RAGSystem that raises an exception"""
+    mock_rag = mocker.MagicMock()
+    mock_rag.session_manager.create_session.return_value = "test-session-456"
+    mock_rag.query.side_effect = Exception("Database connection error")
+    mock_rag.get_course_analytics.side_effect = Exception("Failed to retrieve analytics")
+    return mock_rag
+
+
+@pytest.fixture
+def sample_query_request():
+    """Sample API query request payload"""
+    return {
+        "query": "What are Python variables?",
+        "session_id": None
+    }
+
+
+@pytest.fixture
+def sample_query_request_with_session():
+    """Sample API query request payload with existing session"""
+    return {
+        "query": "Tell me more about data types",
+        "session_id": "existing-session-789"
+    }
