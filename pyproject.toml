@@ -24,6 +24,7 @@ addopts = [
     "--strict-markers",
     "--tb=short",
     "--disable-warnings",
+    "-p", "no:asyncio",
 ]
 markers = [
     "unit: Unit tests for individual components",
