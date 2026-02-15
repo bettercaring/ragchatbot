@@ -69,9 +69,12 @@ body {
   padding: 0;
 }
 
-/* Header - Hidden */
+/* Header - Visible */
 header {
-  display: none;
+  padding: 2rem 2rem 1rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface);
 }
 
 header h1 {
